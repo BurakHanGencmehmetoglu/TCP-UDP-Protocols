@@ -1,0 +1,13 @@
+Implementation of TCP and reliable UDP protocols using Python socket library. 
+UDP does not provide reliability internally. Thus, I implement RDT (Reliable Data Transfer) protocol on the UDP to make it reliable. 
+
+In the program, I send transfer_file_TCP.txt and transfer_file_UDP.txt files from client to the server with 1000 byte chunks.
+
+For RDT protocol, I choose Go-Back-N protocol with window size 1. 
+In the client, I send sequence number,checksum value, time information and data to the server and wait for 1 second timeout.
+If ACK of that packet does not come or wrong ACK comes, I send same packet. 
+I also check the packet whether I send it before or not to find re-send packets.
+Basically, 'one packet send and wait ACK' protocol I used. In the server, I again calculate checksum of coming chunk and check the if
+it is the same one which client sent. Then, I extract sequence number and compare the expected sequence number. If everything hold,
+I send ACK of that packet to the client and save the time information. If anything goes wrong, I send previous ACK to indicate I
+could not get what I want. At the end, I reassemble the file and write the data to the new file.
